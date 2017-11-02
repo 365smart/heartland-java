@@ -1,5 +1,6 @@
 package com.hps.integrator.fluent;
 
+import com.hps.integrator.entities.HpsTagDataType;
 import com.hps.integrator.entities.HpsTrackData;
 import com.hps.integrator.entities.HpsTransactionDetails;
 import com.hps.integrator.entities.credit.HpsCardHolder;
@@ -21,6 +22,7 @@ public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService
     String token;
     HpsTrackData trackData;
     HpsTransactionDetails details;
+    HpsTagDataType tagData;
 
     public DebitChargeBuilder withAllowDuplicates(boolean value) {
         this.allowDuplicates = value;
@@ -56,6 +58,10 @@ public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService
     }
     public DebitChargeBuilder withDetails(HpsTransactionDetails value) {
         this.details = value;
+        return this;
+    }
+    public DebitChargeBuilder withTagData(HpsTagDataType tagData) {
+        this.tagData = tagData;
         return this;
     }
 
@@ -94,6 +100,9 @@ public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService
 
         if(details != null)
             block1.append(service.hydrateAdditionalTxnFields(details));
+
+        if(tagData != null)
+            block1.append(service.hydrateTagData(tagData));
 
         String clientTxnId = service.getClientTxnId(details);
         return service.submitTransaction(transaction, clientTxnId);
