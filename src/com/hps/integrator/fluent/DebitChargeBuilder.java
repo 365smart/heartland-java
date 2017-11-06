@@ -82,7 +82,9 @@ public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService
         Et.subElement(block1, "AllowPartialAuth").text(allowPartialAuth ? "Y" : "N");
 
         if(trackData != null) {
-            Et.subElement(block1, "TrackData").text(trackData.getValue());
+            Element trackDataElement = service.hydrateTrackData(trackData);
+            block1.append(trackDataElement);
+
             if(trackData.getEncryptionData() != null)
                 block1.append(service.hydrateEncryptionData(trackData.getEncryptionData()));
         }
