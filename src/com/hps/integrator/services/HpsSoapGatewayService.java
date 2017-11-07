@@ -18,6 +18,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public abstract class HpsSoapGatewayService {
     private boolean enableLogging = false;
@@ -53,6 +55,9 @@ public abstract class HpsSoapGatewayService {
         return this.doTransaction(transaction, null);
     }
     protected ElementTree doTransaction(Element transaction, String clientTransactionId) throws HpsException {
+        return this.doTransaction(transaction, clientTransactionId, null);
+    }
+    protected ElementTree doTransaction(Element transaction, String clientTransactionId, Date transactionDate) throws HpsException {
         if (isConfigInvalid()) {
             throw new HpsInvalidRequestException(HpsExceptionCodes.InvalidConfiguration, "Invalid SDK configuration.");
         }
@@ -97,6 +102,8 @@ public abstract class HpsSoapGatewayService {
             Et.subElement(header, "VersionNbr").text(versionNumber);
         if(clientTransactionId != null)
             Et.subElement(header, "ClientTxnId").text(clientTransactionId);
+        if(transactionDate != null)
+            Et.subElement(header, "PosReqDT").text(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").format(transactionDate));
 
         // Transaction
         Element trans = Et.subElement(version1, "Transaction");

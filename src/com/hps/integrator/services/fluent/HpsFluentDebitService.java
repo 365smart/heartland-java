@@ -11,6 +11,7 @@ import com.hps.integrator.infrastructure.validation.HpsIssuerResponseValidation;
 import com.hps.integrator.services.HpsSoapGatewayService;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class HpsFluentDebitService extends HpsSoapGatewayService {
     public HpsFluentDebitService() throws HpsException { }
@@ -51,7 +52,10 @@ public class HpsFluentDebitService extends HpsSoapGatewayService {
         return submitTransaction(transaction, null);
     }
     public HpsDebitAuthorization submitTransaction(Element transaction, String clientTransactionId) throws HpsException {
-        ElementTree rsp = doTransaction(transaction, clientTransactionId);
+        return submitTransaction(transaction, clientTransactionId, null);
+    }
+    public HpsDebitAuthorization submitTransaction(Element transaction, String clientTransactionId, Date transactionDate) throws HpsException {
+        ElementTree rsp = doTransaction(transaction, clientTransactionId, transactionDate);
 
         BigDecimal amount = null;
         if(transaction.tag().equals("DebitSale"))

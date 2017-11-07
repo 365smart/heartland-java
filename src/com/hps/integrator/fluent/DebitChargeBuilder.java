@@ -11,6 +11,7 @@ import com.hps.integrator.infrastructure.validation.HpsInputValidation;
 import com.hps.integrator.services.fluent.HpsFluentDebitService;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService, HpsDebitAuthorization> {
     boolean allowDuplicates = false;
@@ -23,6 +24,7 @@ public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService
     HpsTrackData trackData;
     HpsTransactionDetails details;
     HpsTagDataType tagData;
+    Date transactionDate;
 
     public DebitChargeBuilder withAllowDuplicates(boolean value) {
         this.allowDuplicates = value;
@@ -62,6 +64,10 @@ public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService
     }
     public DebitChargeBuilder withTagData(HpsTagDataType tagData) {
         this.tagData = tagData;
+        return this;
+    }
+    public DebitChargeBuilder withTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
         return this;
     }
 
@@ -107,7 +113,7 @@ public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService
             block1.append(service.hydrateTagData(tagData));
 
         String clientTxnId = service.getClientTxnId(details);
-        return service.submitTransaction(transaction, clientTxnId);
+        return service.submitTransaction(transaction, clientTxnId, transactionDate);
     }
 
     @Override
