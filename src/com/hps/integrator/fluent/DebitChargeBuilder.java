@@ -25,6 +25,7 @@ public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService
     HpsTransactionDetails details;
     HpsTagDataType tagData;
     Date transactionDate;
+    String posSequenceNumber;
 
     public DebitChargeBuilder withAllowDuplicates(boolean value) {
         this.allowDuplicates = value;
@@ -70,6 +71,11 @@ public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService
         this.transactionDate = transactionDate;
         return this;
     }
+    public DebitChargeBuilder withPosSequenceNumber(String posSequenceNumber)
+    {
+        this.posSequenceNumber = posSequenceNumber;
+        return this;
+    }
 
     public DebitChargeBuilder(HpsFluentDebitService service) {
         super(service);
@@ -111,6 +117,9 @@ public class DebitChargeBuilder extends HpsBuilderAbstract<HpsFluentDebitService
 
         if(tagData != null)
             block1.append(service.hydrateTagData(tagData));
+
+        if(posSequenceNumber != null)
+            Et.subElement(block1, "PosSequenceNbr").text(posSequenceNumber);
 
         String clientTxnId = service.getClientTxnId(details);
         return service.submitTransaction(transaction, clientTxnId, transactionDate);
