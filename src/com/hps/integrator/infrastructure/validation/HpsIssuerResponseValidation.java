@@ -1,5 +1,7 @@
 package com.hps.integrator.infrastructure.validation;
 
+import com.hps.integrator.infrastructure.ElementTree;
+import com.hps.integrator.infrastructure.HpsDebitMac;
 import com.hps.integrator.infrastructure.HpsIssuerException;
 import com.hps.integrator.infrastructure.HpsIssuerExceptionCodes;
 import com.hps.integrator.infrastructure.emums.HpsCardType;
@@ -73,7 +75,10 @@ public class HpsIssuerResponseValidation {
     }
 
     public static void checkIssuerResponse(int transactionId, String responseCode, String responseText) throws HpsIssuerException {
-        HpsIssuerException e = getException(transactionId, responseCode, responseText);
+        checkIssuerResponse(transactionId, responseCode, responseText, (HpsDebitMac)null);
+    }
+    public static void checkIssuerResponse(int transactionId, String responseCode, String responseText, HpsDebitMac debitMac) throws HpsIssuerException {
+        HpsIssuerException e = getException(transactionId, responseCode, responseText, debitMac);
         if(e != null) { throw e; }       
     }
     public static void checkIssuerResponse(int transactionId, String responseCode, String responseText, HpsCardType cardType) throws HpsIssuerException {
@@ -82,15 +87,19 @@ public class HpsIssuerResponseValidation {
     }
 
     public static HpsIssuerException getException(Integer transactionId, String responseCode, String responseText) {
+        return getException(transactionId, responseCode, responseText, (HpsDebitMac)null);
+    }
+
+    public static HpsIssuerException getException(Integer transactionId, String responseCode, String responseText, HpsDebitMac debitMac) {
         if (responseCode.equals("85") || responseCode.equals("10") || responseCode.equals("00") || responseCode.equals("0")) return null;
 
         HpsIssuerExceptionCodes code = issuerCodeToCreditExceptionCode.containsKey(responseCode) ? issuerCodeToCreditExceptionCode.get(responseCode) : null;
         if(code != null) {
             String msg = creditExceptionCodeToMessage.containsKey(code) ? creditExceptionCodeToMessage.get(code) : "Unknown issuer error.";
-            return new HpsIssuerException(transactionId, code, msg, responseCode, responseText);
+            return new HpsIssuerException(transactionId, code, msg, responseCode, responseText, debitMac);
         } else {
             return new HpsIssuerException(transactionId, HpsIssuerExceptionCodes.UnknownCreditError,
-                    "An unknown issuer error has occurred.", responseCode, responseText);
+                    "An unknown issuer error has occurred.", responseCode, responseText, debitMac);
         }
     }
     public static HpsIssuerException getException(Integer transactionId, String responseCode, String responseText, HpsCardType cardType) throws HpsIssuerException {
@@ -101,7 +110,7 @@ public class HpsIssuerResponseValidation {
 		cardTypehMap.put(HpsCardType.Credit, "Credit");
 
 		if (cardTypehMap.get(cardType).equals("Credit")) {
-			checkIssuerResponse(transactionId, responseCode, responseText);
+			checkIssuerResponse(transactionId, responseCode, responseText, (HpsDebitMac)null);
 		}
 		if (cardTypehMap.get(cardType).equals("Gift")) {
 			HpsIssuerExceptionCodes giftCode = issuerCodeToGiftExceptionCode.containsKey(responseCode) ? issuerCodeToGiftExceptionCode.get(responseCode) : null;

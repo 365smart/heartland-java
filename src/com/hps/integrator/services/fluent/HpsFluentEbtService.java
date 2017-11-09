@@ -5,6 +5,7 @@ import com.hps.integrator.entities.ebt.HpsEbtAuthorization;
 import com.hps.integrator.fluent.*;
 import com.hps.integrator.infrastructure.Element;
 import com.hps.integrator.infrastructure.ElementTree;
+import com.hps.integrator.infrastructure.HpsDebitMac;
 import com.hps.integrator.infrastructure.HpsException;
 import com.hps.integrator.infrastructure.validation.HpsGatewayResponseValidation;
 import com.hps.integrator.infrastructure.validation.HpsIssuerResponseValidation;
@@ -68,7 +69,8 @@ public class HpsFluentEbtService extends HpsSoapGatewayService {
         HpsIssuerResponseValidation.checkIssuerResponse(
                 rsp.get("Header").getInt("GatewayTxnId"),
                 rsp.get(transaction.tag()).getString("RspCode"),
-                rsp.get(transaction.tag()).getString("RspText")
+                rsp.get(transaction.tag()).getString("RspText"),
+                (HpsDebitMac)null
         );
 
         return new HpsEbtAuthorization().fromElementTree(rsp);

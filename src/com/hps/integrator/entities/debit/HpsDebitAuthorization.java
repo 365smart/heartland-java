@@ -3,6 +3,7 @@ package com.hps.integrator.entities.debit;
 import com.hps.integrator.entities.HpsTransaction;
 import com.hps.integrator.infrastructure.Element;
 import com.hps.integrator.infrastructure.ElementTree;
+import com.hps.integrator.infrastructure.HpsDebitMac;
 
 import java.math.BigDecimal;
 
@@ -15,6 +16,7 @@ public class HpsDebitAuthorization extends HpsTransaction {
     String cvvResultText;
     String cardType;
     BigDecimal authorizedAmount;
+    HpsDebitMac debitMac;
 
     public String getAuthorizationCode() {
         return authorizationCode;
@@ -80,7 +82,16 @@ public class HpsDebitAuthorization extends HpsTransaction {
         this.authorizedAmount = authorizedAmount;
     }
 
-    public HpsDebitAuthorization fromElementTree(ElementTree rsp) {
+    public void setDebitMac(HpsDebitMac debitMac){
+        this.debitMac = debitMac;
+    }
+
+    public HpsDebitMac getDebitMac(){
+        return debitMac;
+    }
+
+    public HpsDebitAuthorization fromElementTree(ElementTree rsp)
+    {
         Element saleResponse = rsp.get("Transaction").firstChild();
 
         super.fromElementTree(rsp);
@@ -90,11 +101,15 @@ public class HpsDebitAuthorization extends HpsTransaction {
         this.setCvvResultCode(saleResponse.getString("CVVRsltCode"));
         this.setCvvResultText(saleResponse.getString("CVVRsltText"));
         this.setCardType(saleResponse.getString("CardType"));
-        if(saleResponse.has("AvailableBalance"))
+        if (saleResponse.has("AvailableBalance"))
             this.setAvailableBalance(new BigDecimal(saleResponse.getString("AvailableBalance")));
-        if(saleResponse.has("AuthAmt"))
+        if (saleResponse.has("AuthAmt"))
             this.setAuthorizedAmount(new BigDecimal(saleResponse.getString("AuthAmt")));
 
+        if (saleResponse.has("DebitMac")) {
+            Element debitMacElement = saleResponse.get("DebitMac");
+            this.setDebitMac(new HpsDebitMac().fromElementTree(debitMacElement));
+        }
         return this;
     }
 }

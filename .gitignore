@@ -16,3 +16,7 @@ log/
 target/
 pom.xml.versionsBackup
 release.properties
+
+# build files
+*.class
+*.jar

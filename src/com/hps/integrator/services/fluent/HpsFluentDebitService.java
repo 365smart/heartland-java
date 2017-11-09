@@ -74,6 +74,10 @@ public class HpsFluentDebitService extends HpsSoapGatewayService {
         if(transaction != null) {
             String responseCode = transaction.getString("RspCode");
             String responseText = transaction.getString("RspText");
+            HpsDebitMac debitMac = null;
+            if(transaction.has("DebitMac")) {
+                debitMac = new HpsDebitMac().fromElementTree(transaction.get("DebitMac"));
+            }
 
             if(responseCode != null) {
                 if(responseCode.equals("91")){
@@ -82,14 +86,14 @@ public class HpsFluentDebitService extends HpsSoapGatewayService {
                     }
                     catch(HpsGatewayException e) {
                         if(e.getDetails().getGatewayResponseCode() == 3)
-                            HpsIssuerResponseValidation.checkIssuerResponse(transactionId, responseCode, responseText);
+                            HpsIssuerResponseValidation.checkIssuerResponse(transactionId, responseCode, responseText, debitMac);
                         throw new HpsCreditException(transactionId, HpsExceptionCodes.IssuerTimeoutReversal, "Error occurred while reversing a charge due to an issuer timeout.", e);
                     }
                     catch(HpsException e) {
                         throw new HpsCreditException(transactionId, HpsExceptionCodes.IssuerTimeoutReversal, "Error occurred while reversing a charge due to an issuer timeout.", e);
                     }
                 }
-                HpsIssuerResponseValidation.checkIssuerResponse(transactionId, responseCode, responseText);
+                HpsIssuerResponseValidation.checkIssuerResponse(transactionId, responseCode, responseText, debitMac);
             }
         }
     }

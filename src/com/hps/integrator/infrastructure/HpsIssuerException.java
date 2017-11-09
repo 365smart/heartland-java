@@ -20,7 +20,15 @@ public class HpsIssuerException extends HpsException {
         this.setCode(code);
     }
 
-    public HpsIssuerException(int transactionId, HpsIssuerExceptionCodes code, String message, String issuerCode, String issuerMessage)
+    public HpsIssuerException(int transactionId, HpsIssuerExceptionCodes code, String message, String issuerCode, String issuerMessage) {
+        this(transactionId, code, message);
+    }
+
+    public HpsIssuerException(int transactionId, HpsIssuerExceptionCodes code, String message, String issuerCode, String issuerMessage, Exception e) {
+	    this(transactionId, code, message, issuerCode, issuerMessage, null, e);
+    }
+
+    public HpsIssuerException(int transactionId, HpsIssuerExceptionCodes code, String message, String issuerCode, String issuerMessage, HpsDebitMac debitMac)
     {
         super(message);
         this.setTransactionId(transactionId);
@@ -29,11 +37,12 @@ public class HpsIssuerException extends HpsException {
         HpsIssuerExceptionDetails details = new HpsIssuerExceptionDetails();
         details.setIssuerResponseCode(issuerCode);
         details.setIssuerResponseText(issuerMessage);
+        details.setDebitMac(debitMac);
 
         this.setDetails(details);
     }
 
-    public HpsIssuerException(int transactionId, HpsIssuerExceptionCodes code, String message, String issuerCode, String issuerMessage, Exception e)
+    public HpsIssuerException(int transactionId, HpsIssuerExceptionCodes code, String message, String issuerCode, String issuerMessage, HpsDebitMac debitMac, Exception e)
     {
         super(message, e);
         this.setTransactionId(transactionId);
@@ -42,6 +51,7 @@ public class HpsIssuerException extends HpsException {
         HpsIssuerExceptionDetails details = new HpsIssuerExceptionDetails();
         details.setIssuerResponseCode(issuerCode);
         details.setIssuerResponseText(issuerMessage);
+        details.setDebitMac(debitMac);
 
         this.setDetails(details);
     }
