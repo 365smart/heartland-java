@@ -25,6 +25,9 @@ public class HpsAltPaymentService extends HpsSoapGatewayService {
     public HpsAltPaymentService(IHpsServicesConfig config, boolean enableLogging) throws HpsException {
         super(config, enableLogging);
     }
+    public HpsAltPaymentService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
+        super(config, logger);
+    }
 
     public HpsAltPaymentAuth authorize(String sessionId, BigDecimal amount, String currency, HpsBuyerData buyerData, HpsPaymentData paymentData) throws HpsException {
         return this.authorize(sessionId, amount, currency, buyerData, paymentData, null, null);

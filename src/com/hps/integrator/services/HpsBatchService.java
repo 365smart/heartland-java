@@ -5,6 +5,7 @@ import com.hps.integrator.entities.batch.HpsBatch;
 import com.hps.integrator.infrastructure.Element;
 import com.hps.integrator.infrastructure.ElementTree;
 import com.hps.integrator.infrastructure.HpsException;
+import com.hps.integrator.infrastructure.IHpsRequestLogger;
 import com.hps.integrator.infrastructure.validation.HpsGatewayResponseValidation;
 
 import java.math.BigDecimal;
@@ -13,6 +14,10 @@ public class HpsBatchService extends HpsSoapGatewayService {
 
     public HpsBatchService(IHpsServicesConfig config) throws HpsException {
         super(config);
+    }
+
+    public HpsBatchService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
+        super(config, logger);
     }
 
     public HpsBatch closeBatch() throws HpsException {

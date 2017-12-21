@@ -20,6 +20,10 @@ public class HpsFluentCheckService extends HpsSoapGatewayService {
         super(config, enableLogging);
     }
 
+    public HpsFluentCheckService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
+        super(config, logger);
+    }
+
     public CheckOverrideBuilder override() {
         return new CheckOverrideBuilder(this);
     }

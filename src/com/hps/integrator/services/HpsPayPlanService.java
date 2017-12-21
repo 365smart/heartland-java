@@ -4,13 +4,17 @@ import com.hps.integrator.entities.payplan.*;
 import com.hps.integrator.infrastructure.HpsException;
 import com.hps.integrator.infrastructure.HpsInvalidRequestException;
 import com.hps.integrator.infrastructure.HpsPayPlanPaymentMethodType;
+import com.hps.integrator.infrastructure.IHpsRequestLogger;
 import org.apache.commons.codec.binary.Base64;
 
 import java.util.HashMap;
 
 public class HpsPayPlanService extends HpsRestGatewayService {
     public HpsPayPlanService(HpsPayPlanServiceConfig config) {
-        super(config);
+        this(config, null);
+    }
+    public HpsPayPlanService(HpsPayPlanServiceConfig config, IHpsRequestLogger requestLogger) {
+        super(config, requestLogger);
 
         byte[] encoded = Base64.encodeBase64(servicesConfig.getSecretAPIKey().getBytes());
         String auth = String.format("Basic %s", new String(encoded));

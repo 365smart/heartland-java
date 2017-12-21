@@ -11,6 +11,7 @@ import com.hps.integrator.infrastructure.*;
 import com.hps.integrator.infrastructure.Element;
 import com.hps.integrator.infrastructure.emums.EncodingType;
 import com.hps.integrator.infrastructure.emums.TokenMappingType;
+import com.hps.integrator.infrastructure.utils.HpsStringUtils;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
@@ -18,25 +19,31 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
 
 public abstract class HpsSoapGatewayService {
-    private boolean enableLogging = false;
+    private IHpsRequestLogger requestLogger;
     protected String clientTransactionId;
     protected IHpsServicesConfig servicesConfig;
     protected ElementTree Et;
     protected String url;
 
     protected HpsSoapGatewayService() throws HpsException {
-        this(null, false);
+        this(null, null);
     }
 
     protected HpsSoapGatewayService(IHpsServicesConfig config) throws HpsException {
-        this(config, false);
+        this(config, null);
     }
 
-    protected HpsSoapGatewayService(IHpsServicesConfig config, boolean enableLogging) throws HpsException {
+    protected HpsSoapGatewayService(IHpsServicesConfig config, boolean enableConsoleLogging) throws HpsException {
+        this(config, enableConsoleLogging ? new ConsoleHpsRequestLogger() : null);
+    }
+
+    protected HpsSoapGatewayService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
         this.servicesConfig = (config == null) ? new HpsConfiguration() : config;
-        this.enableLogging = enableLogging;
+        this.requestLogger = (logger == null) ? new NoopRequestLogger() : logger;
         this.Et = new ElementTree();
 
         String secretApiKey = this.servicesConfig.getSecretAPIKey();
@@ -108,16 +115,12 @@ public abstract class HpsSoapGatewayService {
         trans.append(transaction);
 
         String xml = Et.toString(envelope);
-        if(this.enableLogging)
-            System.out.println("Request: " + xml);
+        HttpRequestInfo requestInfo = buildRequest(xml);
+        requestLogger.onBeforeRequest(requestInfo);
 
         HttpsURLConnection conn;
         try {
-            String mUrl = this.servicesConfig.getServiceUri();
-            if(mUrl == null || "".equals(mUrl))
-                mUrl = this.url;
-
-            conn = (HttpsURLConnection)new URL(mUrl).openConnection();
+            conn = (HttpsURLConnection)new URL(requestInfo.getUrl()).openConnection();
         }
         catch (IOException e) { throw new HpsException(e.getMessage(), e); }
 
@@ -127,10 +130,11 @@ public abstract class HpsSoapGatewayService {
 
             conn.setDoOutput(true);
             conn.setDoInput(true);
-            conn.setRequestMethod("POST");
-            conn.addRequestProperty("Content-Type", "text/xml; charset=UTF-8");
-            conn.addRequestProperty("Content-Length", String.valueOf(data.length));
-            conn.addRequestProperty("Host", "cert.api2.heartlandportico.com");
+            conn.setRequestMethod(requestInfo.getMethod());
+            for (Map.Entry<String, List<String>> headerValues : requestInfo.getHeaders().entrySet())
+            {
+                conn.addRequestProperty(headerValues.getKey(), HpsStringUtils.join(headerValues.getValue(), ','));
+            }
 
             DataOutputStream requestStream = new DataOutputStream(conn.getOutputStream());
             requestStream.write(data);
@@ -140,13 +144,29 @@ public abstract class HpsSoapGatewayService {
             InputStream responseStream = conn.getInputStream();
             rawResponse += readFully(responseStream);
             responseStream.close();
-            if(this.enableLogging)
-                System.out.println("Response: " + rawResponse);
+            HttpResponseInfo response = new HttpResponseInfo(conn.getResponseCode(), conn.getHeaderFields(), rawResponse);
+            requestLogger.onResponseReceived(requestInfo, response);
 
             return ElementTree.parse(rawResponse);
         } catch (IOException e) {
             throw new HpsGatewayException(HpsExceptionCodes.UnknownGatewayError, e.getMessage());
         }
+    }
+
+    private HttpRequestInfo buildRequest(String requestXml)
+    {
+        String url = this.servicesConfig.getServiceUri();
+        if(url == null || "".equals(url))
+            url = this.url;
+
+        HttpRequestInfo requestInfo = new HttpRequestInfo();
+        requestInfo.setUrl(url);
+        requestInfo.setBody(requestXml);
+        requestInfo.setMethod("POST");
+        requestInfo.setHeader("Content-Type", "text/xml; charset=UTF-8");
+        requestInfo.setHeader("Content-Length", String.valueOf(requestInfo.getBodyBytes().length));
+        requestInfo.setHeader("Host", "cert.api2.heartlandportico.com");
+        return requestInfo;
     }
 
     private String readFully(InputStream stream) throws IOException {

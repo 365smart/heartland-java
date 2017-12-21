@@ -3,6 +3,7 @@ package com.hps.integrator.services;
 import com.hps.integrator.entities.activation.HpsDeviceActivationKeyResponse;
 
 import com.hps.integrator.infrastructure.HpsInvalidRequestException;
+import com.hps.integrator.infrastructure.IHpsRequestLogger;
 
 import java.util.HashMap;
 
@@ -10,7 +11,10 @@ public class HpsActivationService extends HpsRestGatewayService{
     private HpsActivationServiceConfig mConfig;
 
     public HpsActivationService(HpsActivationServiceConfig configuration) {
-        super(configuration);
+        this(configuration, null);
+    }
+    public HpsActivationService(HpsActivationServiceConfig configuration, IHpsRequestLogger requestLogger) {
+        super(configuration, requestLogger);
         mConfig = configuration;
         configureBaseUrl(mConfig.IsTest);
     }

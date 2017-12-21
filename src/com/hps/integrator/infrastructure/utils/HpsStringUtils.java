@@ -4,6 +4,7 @@ import com.hps.integrator.infrastructure.emums.ControlCodes;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.List;
 
 public class HpsStringUtils {
     public static boolean isNullOrEmpty(String str){
@@ -44,5 +45,17 @@ public class HpsStringUtils {
         while(rvalue.length() < length)
             rvalue = paddingChar + rvalue;
         return rvalue;
+    }
+
+    public static String join(List<String> list, char separator) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            builder.append(list.get(i));
+            if (i < list.size() - 1)
+            {
+                builder.append(separator);
+            }
+        }
+        return builder.toString();
     }
 }

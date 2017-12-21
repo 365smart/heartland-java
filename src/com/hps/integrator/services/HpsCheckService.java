@@ -3,19 +3,20 @@ package com.hps.integrator.services;
 import com.hps.integrator.abstractions.IHpsServicesConfig;
 import com.hps.integrator.entities.check.HpsCheck;
 import com.hps.integrator.entities.check.HpsCheckResponse;
-import com.hps.integrator.entities.check.HpsCheckResponseDetails;
 import com.hps.integrator.infrastructure.*;
 import com.hps.integrator.infrastructure.emums.CheckActionType;
 import com.hps.integrator.infrastructure.validation.HpsGatewayResponseValidation;
 import com.hps.integrator.infrastructure.validation.HpsInputValidation;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HpsCheckService extends HpsSoapGatewayService {
     public HpsCheckService(IHpsServicesConfig config) throws HpsException {
         super(config);
+    }
+
+    public HpsCheckService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
+        super(config, logger);
     }
 
     /**

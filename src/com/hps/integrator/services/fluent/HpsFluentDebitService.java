@@ -21,6 +21,9 @@ public class HpsFluentDebitService extends HpsSoapGatewayService {
     public HpsFluentDebitService(IHpsServicesConfig config, boolean enableLogging) throws HpsException {
         super(config, enableLogging);
     }
+    public HpsFluentDebitService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
+        super(config, logger);
+    }
 
     public HpsFluentDebitService withConfig(IHpsServicesConfig config) {
         this.servicesConfig = config;
