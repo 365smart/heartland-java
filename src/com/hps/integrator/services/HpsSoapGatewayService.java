@@ -11,15 +11,13 @@ import com.hps.integrator.infrastructure.*;
 import com.hps.integrator.infrastructure.Element;
 import com.hps.integrator.infrastructure.emums.EncodingType;
 import com.hps.integrator.infrastructure.emums.TokenMappingType;
-import sun.misc.IOUtils;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.nio.charset.Charset;
 
 public abstract class HpsSoapGatewayService {
     private boolean enableLogging = false;
@@ -140,7 +138,7 @@ public abstract class HpsSoapGatewayService {
             requestStream.close();
 
             InputStream responseStream = conn.getInputStream();
-            rawResponse += new String(IOUtils.readFully(responseStream, conn.getContentLength(), true));
+            rawResponse += readFully(responseStream);
             responseStream.close();
             if(this.enableLogging)
                 System.out.println("Response: " + rawResponse);
@@ -151,14 +149,14 @@ public abstract class HpsSoapGatewayService {
         }
     }
 
-//    protected HpsTransactionHeader hydrateTransactionHeader(PosResponseVer10Header header) {
-//        return new HpsTransactionHeader(
-//                header.GatewayRspCode,
-//                header.GatewayRspMsg,
-//                header.RspDT,
-//                header.GatewayTxnId
-//        );
-//    }
+    private String readFully(InputStream stream) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        Reader reader = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8")));
+        int c;
+        while((c = reader.read()) != -1)
+            sb.append((char)c);
+        return sb.toString();
+    }
 
     private boolean isConfigInvalid() {
         return servicesConfig.getSecretAPIKey() == null &&
@@ -255,10 +253,21 @@ public abstract class HpsSoapGatewayService {
         if(checkHolder.getAddress() != null) {
             HpsAddress address = checkHolder.getAddress();
 
-            Et.subElement(consumerInfo, "Address1").text(address.getAddress());
-            Et.subElement(consumerInfo, "City").text(address.getCity());
-            Et.subElement(consumerInfo, "State").text(address.getState());
-            Et.subElement(consumerInfo, "Zip").text(address.getZip());
+            if (address.getAddress() != null) {
+                Et.subElement(consumerInfo, "Address1").text(address.getAddress());
+            }
+
+            if (address.getCity() != null) {
+                Et.subElement(consumerInfo, "City").text(address.getCity());
+            }
+
+            if (address.getState() != null) {
+                Et.subElement(consumerInfo, "State").text(address.getState());
+            }
+
+            if (address.getZip() != null) {
+                Et.subElement(consumerInfo, "Zip").text(address.getZip());
+            }
         }
 
         if(checkHolder.getCheckName() != null)
