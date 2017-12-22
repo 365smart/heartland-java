@@ -11,7 +11,7 @@ public class HttpRequestInfo
   private String method;
   private Map<String, List<String>> headers;
   private String body;
-  private byte[] bodyBytes;
+  private transient byte[] bodyBytes;
 
   public HttpRequestInfo()
   {
