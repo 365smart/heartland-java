@@ -2,16 +2,6 @@ package com.hps.integrator.infrastructure;
 
 public class ConsoleHpsRequestLogger implements IHpsRequestLogger
 {
-  public void onBeforeRequest(String requestBody)
-  {
-
-  }
-
-  public void onResponseReceived(String requestBody, String responseBody)
-  {
-    System.out.println("Response: " + emptyIfNull(responseBody));
-  }
-
   private String emptyIfNull(String value)
   {
     return value == null ? "" : value;
