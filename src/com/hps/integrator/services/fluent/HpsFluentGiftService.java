@@ -5,6 +5,7 @@ import com.hps.integrator.fluent.*;
 import com.hps.integrator.infrastructure.Element;
 import com.hps.integrator.infrastructure.ElementTree;
 import com.hps.integrator.infrastructure.HpsException;
+import com.hps.integrator.infrastructure.IHpsRequestLogger;
 import com.hps.integrator.infrastructure.validation.HpsGatewayResponseValidation;
 import com.hps.integrator.infrastructure.validation.HpsIssuerResponseValidation;
 import com.hps.integrator.services.HpsSoapGatewayService;
@@ -18,6 +19,9 @@ public class HpsFluentGiftService extends HpsSoapGatewayService {
     }
     public HpsFluentGiftService(IHpsServicesConfig config, boolean enableLogging) throws HpsException {
         super(config, enableLogging);
+    }
+    public HpsFluentGiftService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
+        super(config, logger);
     }
 
     public HpsFluentGiftService withConfig(IHpsServicesConfig config) {

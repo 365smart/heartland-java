@@ -1,10 +1,7 @@
 package com.hps.integrator.services.fluent;
 
 import com.hps.integrator.abstractions.IHpsServicesConfig;
-import com.hps.integrator.entities.HpsTransaction;
 import com.hps.integrator.entities.HpsTransactionType;
-import com.hps.integrator.entities.credit.HpsReportTransactionDetails;
-import com.hps.integrator.entities.credit.HpsReportTransactionSummary;
 import com.hps.integrator.fluent.*;
 import com.hps.integrator.infrastructure.*;
 import com.hps.integrator.infrastructure.validation.HpsGatewayResponseValidation;
@@ -23,6 +20,9 @@ public class HpsFluentCreditService extends HpsSoapGatewayService {
     }
     public HpsFluentCreditService(IHpsServicesConfig config, boolean enableLogging) throws HpsException {
         super(config, enableLogging);
+    }
+    public HpsFluentCreditService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
+        super(config, logger);
     }
 
     public HpsFluentCreditService withConfig(IHpsServicesConfig config) {

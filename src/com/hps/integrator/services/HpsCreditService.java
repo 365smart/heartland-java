@@ -29,6 +29,10 @@ public class HpsCreditService extends HpsSoapGatewayService {
         super(servicesConfig, enableLogging);
     }
 
+    public HpsCreditService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
+        super(config, logger);
+    }
+
     public HpsReportTransactionDetails get(Integer transactionId) throws HpsException {
         if(transactionId <= 0) {
             throw new HpsInvalidRequestException("Invalid transaction ID.");

@@ -5,6 +5,7 @@ import com.hps.integrator.entities.gift.*;
 import com.hps.integrator.infrastructure.Element;
 import com.hps.integrator.infrastructure.ElementTree;
 import com.hps.integrator.infrastructure.HpsException;
+import com.hps.integrator.infrastructure.IHpsRequestLogger;
 import com.hps.integrator.infrastructure.emums.GiftCardAliasAction;
 import com.hps.integrator.infrastructure.validation.HpsGatewayResponseValidation;
 import com.hps.integrator.infrastructure.validation.HpsInputValidation;
@@ -22,6 +23,10 @@ public class HpsGiftCardService extends HpsSoapGatewayService {
 
     public HpsGiftCardService(IHpsServicesConfig servicesConfig) throws HpsException {
         super(servicesConfig);
+    }
+
+    public HpsGiftCardService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
+        super(config, logger);
     }
     
     /**

@@ -3,10 +3,7 @@ package com.hps.integrator.services.fluent;
 import com.hps.integrator.abstractions.IHpsServicesConfig;
 import com.hps.integrator.entities.ebt.HpsEbtAuthorization;
 import com.hps.integrator.fluent.*;
-import com.hps.integrator.infrastructure.Element;
-import com.hps.integrator.infrastructure.ElementTree;
-import com.hps.integrator.infrastructure.HpsDebitMac;
-import com.hps.integrator.infrastructure.HpsException;
+import com.hps.integrator.infrastructure.*;
 import com.hps.integrator.infrastructure.validation.HpsGatewayResponseValidation;
 import com.hps.integrator.infrastructure.validation.HpsIssuerResponseValidation;
 import com.hps.integrator.services.HpsSoapGatewayService;
@@ -20,6 +17,9 @@ public class HpsFluentEbtService extends HpsSoapGatewayService {
     }
     public HpsFluentEbtService(IHpsServicesConfig config, boolean enableLogging) throws HpsException {
         super(config, enableLogging);
+    }
+    public HpsFluentEbtService(IHpsServicesConfig config, IHpsRequestLogger logger) throws HpsException {
+        super(config, logger);
     }
 
     public HpsFluentEbtService withConfig(IHpsServicesConfig config) {
