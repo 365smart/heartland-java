@@ -8,6 +8,10 @@ public class HpsGatewayExceptionDetails {
         return gatewayResponseCode;
     }
 
+    public HpsGatewayResponseCode getGatewayResponseCodeEnum() {
+        return HpsGatewayResponseCode.fromInt(gatewayResponseCode);
+    }
+
     public void setGatewayResponseCode(int gatewayResponseCode) {
         this.gatewayResponseCode = gatewayResponseCode;
     }
