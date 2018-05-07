@@ -24,4 +24,5 @@ public enum HpsExceptionCodes {
     InvalidPhonenumber,
     InvalidEmail,
     InvalidCardHolderDetail,
+    ConnectionError
 }

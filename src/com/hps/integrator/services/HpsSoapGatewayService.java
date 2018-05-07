@@ -149,7 +149,7 @@ public abstract class HpsSoapGatewayService {
 
             return ElementTree.parse(rawResponse);
         } catch (IOException e) {
-            throw new HpsGatewayException(HpsExceptionCodes.UnknownGatewayError, e.getMessage());
+            throw new HpsGatewayException(HpsExceptionCodes.ConnectionError, e.getMessage(), e);
         }
     }
 
