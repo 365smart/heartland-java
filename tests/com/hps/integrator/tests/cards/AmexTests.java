@@ -249,7 +249,7 @@ public class AmexTests {
         } catch (HpsIssuerException e) {
             assertEquals(HpsIssuerExceptionCodes.CardDeclined, e.getCode());
             assertEquals("44", e.getDetails().getIssuerResponseCode());
-            assertEquals("HOLD-CALL", e.getDetails().getIssuerResponseText());
+            assertEquals("HOLD", e.getDetails().getIssuerResponseText());
             throw e;
         }
     }

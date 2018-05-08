@@ -151,7 +151,7 @@ public class VisaTests {
 		{
 			assertEquals(HpsIssuerExceptionCodes.CardDeclined, e.getCode());
 			assertEquals("44", e.getDetails().getIssuerResponseCode());
-			assertEquals("HOLD-CALL", e.getDetails().getIssuerResponseText());
+			assertEquals("HOLD", e.getDetails().getIssuerResponseText());
 			throw e;
 		}
 	}
@@ -263,7 +263,7 @@ public class VisaTests {
 		{
 			assertEquals(HpsIssuerExceptionCodes.CardDeclined, e.getCode());
 			assertEquals("41", e.getDetails().getIssuerResponseCode());
-			assertEquals("HOLD-CALL", e.getDetails().getIssuerResponseText());
+			assertEquals("HOLD", e.getDetails().getIssuerResponseText());
 			throw e;
 		}
 	}
@@ -279,7 +279,7 @@ public class VisaTests {
 		{
 			assertEquals(HpsIssuerExceptionCodes.CardDeclined, e.getCode());
 			assertEquals("43", e.getDetails().getIssuerResponseCode());
-			assertEquals("HOLD-CALL", e.getDetails().getIssuerResponseText());
+			assertEquals("HOLD", e.getDetails().getIssuerResponseText());
 			throw e;
 		}
 	}

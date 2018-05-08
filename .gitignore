@@ -20,3 +20,7 @@ release.properties
 # build files
 *.class
 *.jar
+build/
+
+# Gradle
+.gradle
