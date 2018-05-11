@@ -21,6 +21,10 @@ apply plugin: 'maven-publish'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+if (project.hasProperty("teamcity")) {
+    println "##teamcity[buildNumber '${version}']"
+}
+
 sourceSets {
     main {
         java.srcDirs = ['src']
