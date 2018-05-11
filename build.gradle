@@ -28,8 +28,8 @@ sourceSets {
 //There are a lot of test failures. Commenting out tests for now.
 /*test {
         java.srcDirs = ['tests']
-    }
-}*/
+    }*/
+}
 
 
 dependencies {
