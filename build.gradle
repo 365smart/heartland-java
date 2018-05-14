@@ -21,10 +21,6 @@ apply plugin: 'maven-publish'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-if (project.hasProperty("teamcity")) {
-    println "##teamcity[buildNumber '${version}']"
-}
-
 sourceSets {
     main {
         java.srcDirs = ['src']
@@ -52,3 +48,16 @@ publishing {
         }
     }
 }
+
+task configureVersion() {
+    doFirst {
+        if (project.hasProperty("teamcity"))
+        {
+            def buildNumber = project.teamcity["build.number"]
+            version = "${buildNumber}"
+        }
+        println "Configured the version to ${version}"
+    }
+}
+
+build.dependsOn configureVersion
