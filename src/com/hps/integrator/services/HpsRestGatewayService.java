@@ -172,7 +172,7 @@ public abstract class HpsRestGatewayService {
         return sb.toString();
     }
 
-    protected  <T> T hydrateObject(String data, Class<T> clazz) {
+    protected <T> T hydrateObject(String data, Class<T> clazz) {
         Gson gson = new Gson();
         return gson.fromJson(data, clazz);
     }
