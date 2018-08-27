@@ -1,6 +1,5 @@
 package com.hps.integrator.infrastructure;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +9,7 @@ public class HttpResponseInfo
   private final Map<String, List<String>> headers;
   private final String responseBody;
 
-  public HttpResponseInfo(int statusCode, Map<String, List<String>> headers, String responseBody) throws IOException
+  public HttpResponseInfo(int statusCode, Map<String, List<String>> headers, String responseBody)
   {
     this.responseBody = responseBody;
     this.statusCode = statusCode;

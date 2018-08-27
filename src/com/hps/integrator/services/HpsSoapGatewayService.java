@@ -149,8 +149,46 @@ public abstract class HpsSoapGatewayService {
 
             return ElementTree.parse(rawResponse);
         } catch (IOException e) {
+            String responseString = safeReadStream(conn.getErrorStream());
+            HttpResponseInfo response = new HttpResponseInfo(safeGetResponseCode(conn), conn.getHeaderFields(), responseString);
+            requestLogger.onResponseReceived(requestInfo, response);
             throw new HpsGatewayException(HpsExceptionCodes.ConnectionError, e.getMessage(), e);
         }
+    }
+
+    private int safeGetResponseCode(HttpsURLConnection connection)
+    {
+        try
+        {
+            return connection.getResponseCode();
+        }
+        catch (IOException e)
+        {
+            return -1;
+        }
+    }
+
+    private String safeReadStream(InputStream stream)
+    {
+        try
+        {
+            return readFully(stream);
+        }
+        catch (IOException ignored) {}
+        finally
+        {
+            if (stream != null)
+            {
+                try
+                {
+                    stream.close();
+                }
+                catch (IOException ignored)
+                {
+                }
+            }
+        }
+        return null;
     }
 
     private HttpRequestInfo buildRequest(String requestXml)
