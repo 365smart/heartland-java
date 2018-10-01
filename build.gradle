@@ -60,4 +60,5 @@ task configureVersion() {
     }
 }
 
+configureVersion.dependsOn clean
 build.dependsOn configureVersion
